@@ -18,7 +18,7 @@ Det är ett utvecklingsläge när man startar upp Express, man kan starta produk
 
 ## Me-API
 
-För att hantera databasens innehåll kan man använda sig av API:t (https://jsramverk-editor-rahn20.azurewebsites.net/me-api). Det går att hantera innehållet direkt från editor också [Frontend-editor](https://www.student.bth.se/~rahn20/editor/frontend/).
+För att hantera databasens innehåll kan man använda sig av API:t (https://jsramverk-editor-rahn20.azurewebsites.net/me-api). Det går att hantera innehållet direkt från editor [Frontend-editor](https://www.student.bth.se/~rahn20/editor/frontend/).
 
 
 | Request metod | Route                 |   Beskrivning          |
@@ -35,6 +35,6 @@ Ett dokument i databasen har en id, namn och bor innehåll, det kan se ut så h�
 
 ```
 "_id": "1234567890poiuytrewq"
-"namn": "Snorkfröken",
-"bor": "Mumindalen"
+"name": "Mercury",
+"content": "<p>60 million km from the Sun, is the closest planet to the Sun and the smallest planet in the Solar System, Mercury has no natural satellites. Mercury's very tenuous atmosphere consists of atoms     blasted off its surface by the solar wind. Its relatively large iron core and thin mantle have not yet been adequately explained.</p><p><a href='https://en.wikipedia.org/wiki/Solar_System'>source:Wikipedia</a></p>"
 ```
