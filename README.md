@@ -1,6 +1,6 @@
 # jsramverk-backend
 
-En backend repo som handlar om att hämta, lägga till, uppdatera och återställa data från en databas. Modulerna som används är **Nodemon** för automatisk omstart av node-appen, **MongoDB** databas för att skapa databaser och hantera databasens innehåll, **Morgan** för loggning av händelser i API:t och **Cors** för hantering av Cross-Origin Sharing problematik. Vi installerar också **Express** som är en del av MEAN som är en samling moduler för att bygga webbapplikationer med Node.js, **body-parser** för att använda parametrar tillsammans med HTTP metoderna.
+Ett backend repo som handlar om att hämta, lägga till, uppdatera och återställa data från en databas. Modulerna som används är **Nodemon** för automatisk omstart av node-appen, **MongoDB** databas för att skapa databaser och hantera databasens innehåll, **Morgan** för loggning av händelser i API:t och **Cors** för hantering av Cross-Origin Sharing problematik. Vi installerar också **Express** som är en del av MEAN som är en samling moduler för att bygga webbapplikationer med Node.js, **body-parser** för att använda parametrar tillsammans med HTTP metoderna.
 
 Routerna är uppdelade i två filer, en indexfil som har router för att hämta, återställa och skapa data i databasen och en updatefil som uppdaterar innehållet i databasen.
 
