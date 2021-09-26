@@ -1,31 +1,31 @@
 [
     {
         "name": "Mercury",
-        "content": "<p>60 million km from the Sun, is the closest planet to the Sun and the smallest planet in the Solar System, Mercury has no natural satellites. Mercury's very tenuous atmosphere consists of atoms blasted off its surface by the solar wind. Its relatively large iron core and thin mantle have not yet been adequately explained.</p><p><a href='https://en.wikipedia.org/wiki/Solar_System'>source:Wikipedia</a></p>"
+        "content": "<p>60 million km from the Sun, is the closest planet to the Sun and the smallest planet in the Solar System, Mercury has no natural satellites. Mercury's very tenuous atmosphere consists of atoms blasted off its surface by the solar wind. Its relatively large iron core and thin mantle have not yet been adequately explained.</p><p>Source: https://en.wikipedia.org/wiki/Solar_System </p>"
     },
 
     {
         "name": "Venus",
-        "content": "<p>100 million km from the Sun, is close in size to Earth and, like Earth, has a thick silicate mantle around an iron core, a substantial atmosphere, and evidence of internal geological activity. It is much drier than Earth, and its atmosphere is ninety times as dense. Venus has no natural satellites. It is the hottest planet, with surface temperatures over 400 °C</p><p><a href='https://en.wikipedia.org/wiki/Solar_System'>source:Wikipedia</a></p>"
+        "content": "<p>100 million km from the Sun, is close in size to Earth and, like Earth, has a thick silicate mantle around an iron core, a substantial atmosphere, and evidence of internal geological activity. It is much drier than Earth, and its atmosphere is ninety times as dense. Venus has no natural satellites. It is the hottest planet, with surface temperatures over 400 °C</p><p>Source: https://en.wikipedia.org/wiki/Solar_System </p>"
     },
 
     {
         "name": "Earth",
-        "content": "<p>150 million km from the Sun, is the largest and densest of the inner planets, the only one known to have current geological activity, and the only place where life is known to exist. Earth's atmosphere is radically different from those of the other planets, having been altered by the presence of life to contain 21% free oxygen.</p><p><a href='https://en.wikipedia.org/wiki/Solar_System'>source:Wikipedia</a></p>"
+        "content": "<p>150 million km from the Sun, is the largest and densest of the inner planets, the only one known to have current geological activity, and the only place where life is known to exist. Earth's atmosphere is radically different from those of the other planets, having been altered by the presence of life to contain 21% free oxygen.</p><p>Source: https://en.wikipedia.org/wiki/Solar_System </p>"
     },
 
     {
         "name": "Mars",
-        "content": "<p>Mars 220 million km from the Sun, is smaller than Earth and Venus. It has an atmosphere of mostly carbon dioxide with a surface pressure of 6.1 millibars. Mars has two tiny natural satellites (Deimos and Phobos) </p><p><a href='https://en.wikipedia.org/wiki/Solar_System'>source:Wikipedia</a></p>"
+        "content": "<p>Mars 220 million km from the Sun, is smaller than Earth and Venus. It has an atmosphere of mostly carbon dioxide with a surface pressure of 6.1 millibars. Mars has two tiny natural satellites (Deimos and Phobos) </p><p>Source: https://en.wikipedia.org/wiki/Solar_System </p>"
     },
 
     {
         "name": "Jupiter",
-        "content": "<p>Jupiter 780 million km, is 2.5 times the mass of all the other planets put together. It is composed largely of hydrogen and helium. Jupiter has 79 known satellites. The four largest, Ganymede, Callisto, Io, and Europa.</p><p><a href='https://en.wikipedia.org/wiki/Solar_System'>source:Wikipedia</a></p>"
+        "content": "<p>Jupiter 780 million km, is 2.5 times the mass of all the other planets put together. It is composed largely of hydrogen and helium. Jupiter has 79 known satellites. The four largest, Ganymede, Callisto, Io, and Europa.</p><p>Source: https://en.wikipedia.org/wiki/Solar_System </p>"
     },
 
     {
         "name": "Saturn",
-        "content": "<p>Saturn 1.42 billion km, distinguished by its extensive ring system, has several similarities to Jupiter, such as its atmospheric composition and magnetosphere. Although Saturn has 60% of Jupiter's volume. Saturn is the only planet of the Solar System that is less dense than water. The rings of Saturn are made up of small ice and rock particles.</p><p><a href='https://en.wikipedia.org/wiki/Solar_System'>source:Wikipedia</a></p>"
+        "content": "<p>Saturn 1.42 billion km, distinguished by its extensive ring system, has several similarities to Jupiter, such as its atmospheric composition and magnetosphere. Although Saturn has 60% of Jupiter's volume. Saturn is the only planet of the Solar System that is less dense than water. The rings of Saturn are made up of small ice and rock particles.</p><p>Source: https://en.wikipedia.org/wiki/Solar_System </p>"
     }
 ]
