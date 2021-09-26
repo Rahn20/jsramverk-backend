@@ -31,10 +31,10 @@ För att hantera databasens innehåll kan man använda sig av API:t (https://jsr
 
 #### Databasens innehåll  
 
-Ett dokument i databasen har en id, namn och bor innehåll, det kan se ut så här:
+Ett dokument i databasen har en id, namn och innehåll:
 
 ```
 "_id": "1234567890poiuytrewq"
 "name": "Mercury",
-"content": "<p>60 million km from the Sun, is the closest planet to the Sun and the smallest planet in the Solar System, Mercury has no natural satellites. Mercury's very tenuous atmosphere consists of atoms     blasted off its surface by the solar wind. Its relatively large iron core and thin mantle have not yet been adequately explained.</p><p><a href='https://en.wikipedia.org/wiki/Solar_System'>source:Wikipedia</a></p>"
+"content": "<p>60 million km from the Sun, is the closest planet to the Sun and the smallest planet in the Solar System, Mercury has no natural satellites. Mercury's very tenuous atmosphere consists of atoms     blasted off its surface by the solar wind. Its relatively large iron core and thin mantle have not yet been adequately explained.</p><p>Source: https://en.wikipedia.org/wiki/Solar_System </p>"
 ```
