@@ -14,10 +14,10 @@ router.put('/:id', async (request, response) => {
         let body = request.body;
         let res = await data.updateData(request.params.id, body);
 
-        console.log(request.body);
+        //console.log(request.body);
         response.json(res);
     } catch (err) {
-        console.log(err);
+        //console.log(err);
         response.json(err);
     }
 });
