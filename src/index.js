@@ -3,7 +3,7 @@
  */
 "use strict";
 
-process.env.NODE_ENV = 'test';
+//process.env.NODE_ENV = 'test';
 
 const database = require("../db/database.js");
 const fs = require("fs");
