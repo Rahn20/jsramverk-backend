@@ -3,6 +3,8 @@
  */
 "use strict";
 
+process.env.NODE_ENV = 'test';
+
 const database = require("../db/database.js");
 const fs = require("fs");
 const path = require("path");
@@ -41,7 +43,7 @@ let data = {
         for (const [skey] of Object.entries(search[0])) {
             for (const [bkey, bvalue] of Object.entries(body)) {
                 if (skey == bkey) {
-                    console.log(bkey);
+                    //console.log(bkey);
                     bodyDoc[bkey] = bvalue;
                 }
             }

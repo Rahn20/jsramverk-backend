@@ -5,7 +5,8 @@
 "use strict";
 
 const mongo = require("mongodb").MongoClient;
-const config = require("./config.json");
+const config = process.env.rahn20 || require("./config.json");
+//const config = require("./config.json");
 
 const database = {
     getDb: async function getDb() {

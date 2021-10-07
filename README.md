@@ -38,3 +38,21 @@ Ett dokument i databasen har en id, namn och innehåll:
 "name": "Mercury",
 "content": "<p>60 million km from the Sun, is the closest planet to the Sun and the smallest planet in the Solar System, Mercury has no natural satellites. Mercury's very tenuous atmosphere consists of atoms     blasted off its surface by the solar wind. Its relatively large iron core and thin mantle have not yet been adequately explained.</p><p>Source: https://en.wikipedia.org/wiki/Solar_System </p>"
 ```
+
+## Testning
+De verktygen som används för att köra enhetstester är **Mocha**, **Istanbul** för att hantera kodtäckning vid enhetstester, **Chai** och **Chai http** (integrationstester). Chai låter oss på ett smidigt och enkelt sätt kolla om JavaScript är lika med det vi vill testa för. Vi använder chai http för att anropa våra router och kolla om svaren vi får tillbaka matcher det vi förväntar oss. För statisk kodvalidering använder vi eslint.
+```
+npm install mocha nyc chai chai-http --save-dev
+npm install javascript-style-guide --save-dev
+cp node_modules/javascript-style-guide/.eslint* .
+npm install eslint eslint-plugin-react --save-dev
+```
+Vi uppdaterar vår package.json, vi lägger till nya scripts:
+```
+"scripts": {
+    "test": "nyc --reporter=html --reporter=text --reporter=clover mocha 'test/*.js' --timeout 10000",
+    "posttest": "npm run eslint",
+    "clean": "rm -rf coverage .nyc_output",
+    "eslint": "eslint ."
+},
+```
