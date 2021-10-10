@@ -56,3 +56,11 @@ Vi uppdaterar vår package.json, vi lägger till nya scripts:
     "eslint": "eslint ."
 },
 ```
+
+## START
+
+Vi installerar allt som finns i package.json och exekverar validatorer och testfall
+```
+npm install
+npm test
+```
