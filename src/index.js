@@ -32,7 +32,18 @@ let data = {
         return result;
     },
 
-    //update a specific array in the database
+    //view the content of a specific document
+    showSpecificDoc: async function(id) {
+        let db = await database.getDb();
+        const ObjectId = require('mongodb').ObjectId;
+        const filter = { _id: ObjectId(id) };
+        const result = await db.collection.find(filter, {}).toArray();
+
+        await db.client.close();
+        return result;
+    },
+
+    //update a specific document in the database
     updateData: async function(id, body) {
         let db = await database.getDb();
         const ObjectId = require('mongodb').ObjectId;
@@ -56,7 +67,7 @@ let data = {
         return result;
     },
 
-    //create new data in mumin database
+    //create new document in planet database
     createData: async function(body) {
         let db = await database.getDb();
         const result = await db.collection.insertOne(body);
