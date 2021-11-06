@@ -1,5 +1,5 @@
 /**
- * a main file
+ * main file
  *
 */
 "use strict";
@@ -14,6 +14,15 @@ const routeUpdate = require('./routes/update');
 
 const app = express();
 const port = process.env.PORT || 1337;
+const httpServer = require("http").createServer(app);
+
+
+const io = require("socket.io")(httpServer, {
+    cors: {
+        origins: ['http://localhost:4200', 'https://www.student.bth.se/'],
+        methods: ["GET", "POST", "PUT"],
+    }
+});
 
 app.use(cors());
 //app.use(express.json());
@@ -37,6 +46,24 @@ if (process.env.NODE_ENV !== 'test') {
 app.use('/me-api', routeIndex);
 app.use('/me-api/update', routeUpdate);
 
+
+io.sockets.on('connection', function(socket) {
+    console.log("Connected", socket.id);
+    let prev;
+
+    socket.on('create', (room) => {
+        socket.leave(prev);
+        socket.join(room);
+
+        prev = room;
+        socket.on('doc', (data) => {
+            socket.to(data['_id']).emit("doc", data);
+        });
+    });
+
+    //socket.leave(prev);
+});
+
 // Add routes for 404 and error handling
 app.use((req, res, next) => {
     var err = new Error("Not Found");
@@ -45,7 +72,8 @@ app.use((req, res, next) => {
     next(err);
 });
 
-// Start up server
-const server = app.listen(port, () => console.log(`Example API listening on port ${port}!`));
+
+// Start up the server
+const server = httpServer.listen(port, () => console.log(`Me-API listening on port ${port}!`));
 
 module.exports = server;
