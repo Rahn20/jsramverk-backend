@@ -14,19 +14,29 @@ npm install -g nodemon
 npm install nodemon --save-dev
 node app.js
 ```
-Det är ett utvecklingsläge när man startar upp Express, man kan starta produktionsläge med kommandot `NODE_ENV="production" node app.js` ,Detta ger mindre information i felmeddelandena.
+Det är ett utvecklingsläge när man startar upp Express, man kan starta produktionsläge med kommandot `NODE_ENV="production" node app.js`, detta ger mindre information i felmeddelandena.
+
+#### Socket.io
+
+**Socket.io** är en modul som implementerar websockets för realtid i klient och server. Socket.io underlättar kommunikationen mellan klient och server när vi vill skicka data över en websocket mellan en server och flertal klienter. Vi installera socket.io via npm tillsammans med två andra packet som kan snabba upp servers hantering av socket. 
+
+```
+npm install --save socket.io
+npm install --save-optional bufferutil utf-8-validate
+```
 
 ## Me-API
 
 För att hantera databasens innehåll kan man använda sig av API:t (https://jsramverk-editor-rahn20.azurewebsites.net/me-api). Det går att hantera innehållet direkt från editor [Frontend-editor](https://www.student.bth.se/~rahn20/editor/frontend/).
 
 
-| Request metod | Route                 |   Beskrivning          |
-|---------------|-----------------------|------------------------|
-|   GET         | /me-api               | visar data             |
-|   GET         | /me-api/reset         | återställer data       |
-|   PUT         | /me-api/update/:id    | uppdaterar data        |
-|   POST        | /me-api/create        | skapar data            |
+| Request metod | Route                 |   Beskrivning                     |
+|---------------|-----------------------|------------------------           |
+|   GET         | /me-api               | Visar alla dokumenten             |
+|   GET         | /me-api/reset         | Återställer dokumenten            |
+|   PUT         | /me-api/update/:id    | Uppdaterar ett specifikt dokument |
+|   POST        | /me-api/create        | Skapar ett nytt dokument          |
+|   GEt         | /me-api/document/:id  | Visa ett specifikt dokument       |
 
 
 #### Databasens innehåll  
