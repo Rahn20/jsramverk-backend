@@ -7,17 +7,14 @@
 let express = require('express');
 let router = express.Router();
 
-let data = require('../src/index.js');
+let auth = require('../src/auth.js');
+let data = require('../src/data.js');
 
-router.put('/:id', async (request, response) => {
-    try {
-        let body = request.body;
-        let res = await data.updateData(request.params.id, body);
+// update a docuemnt
+router.put('/',
+    (request, response, next) => auth.checkToken(request, response, next),
+    (request, response) => data.updateData(request, response)
+);
 
-        response.json(res);
-    } catch (err) {
-        response.json(err);
-    }
-});
 
 module.exports = router;
