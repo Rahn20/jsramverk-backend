@@ -9,13 +9,14 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+const middleware = require("./middleware/index.js");
 const routeIndex = require('./routes/index');
 const routeUpdate = require('./routes/update');
+const routeUsers = require('./routes/users');
 
 const app = express();
 const port = process.env.PORT || 1337;
 const httpServer = require("http").createServer(app);
-
 
 const io = require("socket.io")(httpServer, {
     cors: {
@@ -30,21 +31,18 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 
-// This is middleware called for all routes.
-// Middleware takes three parameters.
-app.use((req, res, next) => {
-    console.info(`Got request on ${req.path} (${req.method}).`);
-    next();
-});
+// Middleware
+app.use(middleware.logIncomingToConsole);
 
 // don't show the log when it is test
 if (process.env.NODE_ENV !== 'test') {
-    // use morgan to log at command line
-    app.use(morgan('combined')); // 'combined' outputs the Apache style LOGs
+    // use morgan to log at command line, 'combined' outputs the Apache style LOGs
+    app.use(morgan('combined'));
 }
 
 app.use('/me-api', routeIndex);
 app.use('/me-api/update', routeUpdate);
+app.use('/me-api/users', routeUsers);
 
 
 io.sockets.on('connection', function(socket) {
@@ -60,13 +58,11 @@ io.sockets.on('connection', function(socket) {
             socket.to(data['_id']).emit("doc", data);
         });
     });
-
-    //socket.leave(prev);
 });
 
 // Add routes for 404 and error handling
 app.use((req, res, next) => {
-    var err = new Error("Not Found");
+    let err = new Error("Not Found");
 
     err.status = 404;
     next(err);
