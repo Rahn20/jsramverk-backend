@@ -1,6 +1,8 @@
-#node_modules/
 
 db/config.json
+
+old routes/
+old src/
 
 .vscode/
 
