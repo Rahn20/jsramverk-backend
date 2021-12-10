@@ -1,5 +1,5 @@
 /**
- * main file
+ * main file for me-api
  *
 */
 "use strict";
@@ -8,16 +8,23 @@ const express = require("express");
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const { graphqlHTTP } = require('express-graphql');
 
+// routes + middleware
 const middleware = require("./middleware/index.js");
 const routeIndex = require('./routes/index');
-const routeUpdate = require('./routes/update');
-const routeUsers = require('./routes/users');
 
+// GraphQL
+const RootQueryType = require('./graphql/rootQuery.js');
+const RootMutationType = require('./graphql/rootMutation.js');
+const { GraphQLSchema } = require('graphql');
+
+// use express
 const app = express();
 const port = process.env.PORT || 1337;
 const httpServer = require("http").createServer(app);
 
+// socket.io
 const io = require("socket.io")(httpServer, {
     cors: {
         origins: ['http://localhost:4200', 'https://www.student.bth.se/'],
@@ -26,25 +33,33 @@ const io = require("socket.io")(httpServer, {
 });
 
 app.use(cors());
-//app.use(express.json());
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-
-// Middleware
+// use Middleware
 app.use(middleware.logIncomingToConsole);
 
 // don't show the log when it is test
 if (process.env.NODE_ENV !== 'test') {
-    // use morgan to log at command line, 'combined' outputs the Apache style LOGs
+    // use morgan to log at command line
     app.use(morgan('combined'));
 }
 
+// routes
 app.use('/me-api', routeIndex);
-app.use('/me-api/update', routeUpdate);
-app.use('/me-api/users', routeUsers);
 
+// use graphQL
+const schema = new GraphQLSchema({
+    query: RootQueryType,
+    mutation: RootMutationType
+});
 
+app.use('/me-api/graphql', graphqlHTTP({
+    schema: schema,
+    graphiql: false,
+}));
+
+// sockets
 io.sockets.on('connection', function(socket) {
     console.log("Connected", socket.id);
     let prev;
@@ -60,6 +75,7 @@ io.sockets.on('connection', function(socket) {
     });
 });
 
+
 // Add routes for 404 and error handling
 app.use((req, res, next) => {
     let err = new Error("Not Found");
@@ -68,8 +84,7 @@ app.use((req, res, next) => {
     next(err);
 });
 
-
-// Start up the server
+// Start the server
 const server = httpServer.listen(port, () => console.log(`Me-API listening on port ${port}!`));
 
 module.exports = server;

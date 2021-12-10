@@ -1,7 +1,7 @@
 {
   "name": "me-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "API",
   "main": "app.js",
   "scripts": {
     "test": "nyc --reporter=html --reporter=text --reporter=clover mocha 'test/*.js' --timeout 10000",
@@ -12,13 +12,15 @@
     "clean-all": "rm -rf node_modules package-lock.json coverage .nyc_output",
     "eslint": "eslint ."
   },
-  "author": "Ranim Hanna Malko",
+  "author": "Ranim Hanna",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^16.0.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.1.1",
     "morgan": "^1.10.0",
