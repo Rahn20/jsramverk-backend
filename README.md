@@ -2,9 +2,8 @@
 
 # jsramverk-backend
 
-Ett backend repo som handlar om att hämta, lägga till, uppdatera och återställa data från en databas. Modulerna som används är **Nodemon** för automatisk omstart av node-appen, **MongoDB** databas för att skapa databaser och hantera databasens innehåll, **Morgan** för loggning av händelser i API:t och **Cors** för hantering av Cross-Origin Sharing problematik. Vi installerar också **Express** som är en del av MEAN som är en samling moduler för att bygga webbapplikationer med Node.js, **body-parser** för att använda parametrar tillsammans med HTTP metoderna.
+Ett backend repo som handlar om att hämta, radera, uppdatera och återställa data från en databas. Modulerna som används är **Nodemon** för automatisk omstart av node-appen, **MongoDB** databas för att skapa databaser och hantera databasens innehåll, **Morgan** för loggning av händelser i API:t och **Cors** för hantering av Cross-Origin Sharing problematik. Vi installerar också **Express** som är en del av MEAN som är en samling moduler för att bygga webbapplikationer med Node.js, **body-parser** för att använda parametrar tillsammans med HTTP metoderna.
 
-Routerna är uppdelade i två filer, en indexfil som har router för att hämta, återställa och skapa data i databasen och en updatefil som uppdaterar innehållet i databasen.
 
 ## Installation
 
@@ -29,35 +28,38 @@ npm install --save-optional bufferutil utf-8-validate
 
 ### Autentisering
 
-För säker hantering av lösenord använder vi bcrypt och för att autentisera klienter mot en server anvädner vi tokens.
+För säker hantering av lösenord använder vi bcrypt och för att autentisera klienter mot en server använder vi tokens.
 
 ```
 npm install --save bcrypt.js
 npm install --save jsonwebtoken
 ```
 
+### GraphQL
+
+GraphQL är ett query språk för API:er, den ger en fullständig beskrivning av data i API:et, ger klienterna möjlighet att fråga efter exakt vad de behöver och inget mer, det gör det lättare att utveckla API:er över tid och möjliggör kraftfulla utvecklarverktyg.
+
+```
+npm install --save graphql
+npm install --save express-graphql
+```
+
 ## Me-API
 
-För att hantera databasens innehåll kan man använda sig av API:t (https://jsramverk-editor-rahn20.azurewebsites.net/me-api). Det går att hantera innehållet direkt från editor [Frontend-editor](https://www.student.bth.se/~rahn20/editor/frontend/).
+API:et (https://jsramverk-editor-rahn20.azurewebsites.net/me-api). Det går att hantera innehållet direkt från editor [Frontend-editor](https://www.student.bth.se/~rahn20/editor/frontend/).
 
 
-| Request metod | Route                 |   Beskrivning                                 
-|---------------|-----------------------|---------------------------------------|
-|   PUT         | /me-api/update        | Uppdaterar ett specifikt dokument     | 
-|   POST        | /me-api/create        | Skapar ett nytt dokument              | 
-|   GET         | /me-api/document/:id  | Visar ett specifikt dokument          |
-|   DEL         | /me-api/delete/:id    | Raderar ett specifikt dokument        |        
-|   GET         | /me-api/users         | Visar alla användare                  |    
-|   GET         | /me-api/users/:id     | Visar ett specifikt användare         |       
-|   DEL         | /me-api/users         | Raderar ett användare                 |
-|   PUT         | /me-api/users         | Uppdaterar användare                  |
-|   POST        | /me-api/users/register| Registrerar ett användare             |
-|   POST        | /me-api/users/login   | Logga in                              |
+| Request metod | Route             |   Beskrivning                                 
+|---------------|-------------------|------------------------------|
+|   POST        | /me-api/register  | Registrerar ett användare    |
+|   POST        | /me-api/login     | Logga in                     |
+
+Föt att Uppdatera ett dokument, skapa ett nytt dokument, visa ett dokument, radera ett dokument, visa alla användare, visa en användare, radera en användare och uppdatera en användare kan göra med **GraphQL** route /me-api/graphql.
 
 
 ### Databasens innehåll  
 
-En planet databas som innehåller dokuemnterna och består av id, namn och innehåll, en users databas som innehåller alla användarens information och består av id, namn, email, lösenord, dokuments id och tillåtna användare id.
+En planet databas som innehåller dokuemnterna och består av id, namn och innehåll, en users databas som innehåller alla användarens information och består av id, namn, email, lösenord, dokuments id och tillåtna användares id.
 
 **Dokument:**
 
