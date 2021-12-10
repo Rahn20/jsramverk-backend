@@ -1,5 +1,5 @@
 /**
- *
+ * Get, update and delete data 'documents' från database
  */
 "use strict";
 
@@ -15,26 +15,48 @@ const docs = JSON.parse(fs.readFileSync(
     "utf8"
 ));
 
-let data = {
-    //Reset a collection by removing existing content and insert with default data
+const data = {
+    /**
+     * Reset a collection by removing existing content and insert with default data
+     * @returns {Object}
+     */
     resetCollection: async function() {
         let db = await database.getDocs();
+        let remove = await db.collection.deleteMany();
+        let insert = await db.collection.insertMany(docs);
 
-        await db.collection.deleteMany();
-        await db.collection.insertMany(docs);
-        await db.client.close();
+        try {
+            if (insert.insertedCount === 6 && remove.acknowledged) {
+                return  {
+                    data: "Data has been restored."
+                };
+            }
+        } catch (e) {
+            return  {
+                error: e.message
+            };
+        } finally {
+            await db.client.close();
+        }
     },
 
-    //view the contents of the 'planets' database
-    showData: async function() {
-        let db = await database.getDocs();
-        const result = await db.collection.find({}, {}).limit(0).toArray();
+    /**
+     * view the contents of the 'planets' database
+     * @returns {Array}
+     */
+    getAllDocs: async function() {
+        const db = await database.getDocs();
+        const result = await db.collection.find({}).toArray();
 
         await db.client.close();
         return result;
     },
 
-    //view the content of a specific document
+    /**
+     * view the content of a specific document
+     * @param {*} id document id
+     * @returns {Array}
+     */
     showSpecificDoc: async function(id) {
         let db = await database.getDocs();
         const filter = { _id: ObjectId(id) };
@@ -44,77 +66,72 @@ let data = {
         return result;
     },
 
-    //update a specific document in the database
-    updateData: async function(request, response) {
-        // req contains user object set in checkToken middleware
-        let email = request.user.email;
-        let content = request.body.content;
-        let docId = request.body._id;
+    /**
+     * update a specific document in the database
+     * @param {*} email user email adress
+     * @param {*} content the new content of the document
+     * @param {*} docId the docuemnts id
+     * @returns {object}
+     */
+    updateData: async function(email, content, docId) {
         let db;
 
-        if (content && docId) {
-            try {
-                // check if the document belongs to the loged in user
-                let dbUser = await database.getUsers();
-                let find = {
-                    email: email,
-                    "docs._id": ObjectId(docId)
+        try {
+            // check if the document belongs to the loged in user
+            let dbUser = await database.getUsers();
+            let find = {
+                email: email,
+                "docs._id": ObjectId(docId)
+            };
+
+            let userData = await dbUser.collection.find(find, {}).toArray();
+
+            await dbUser.client.close();
+
+            if (userData.length >= 1) {
+                db = await database.getDocs();
+                let result = await data.showSpecificDoc(docId);
+                let filter = { _id: result[0]._id };
+                let updateDocument = {
+                    $set: {
+                        name: result[0].name,
+                        content: content
+                    }
                 };
 
-                let userData = await dbUser.collection.find(find, {}).toArray();
+                await db.collection.updateOne(filter, updateDocument);
 
-                await dbUser.client.close();
-
-                if (userData.length >= 1) {
-                    db = await database.getDocs();
-                    let result = await data.showSpecificDoc(docId);
-                    let filter = { _id: result[0]._id };
-                    let updateDocument = {
-                        $set: {
-                            name: result[0].name,
-                            content: content
-                        }
-                    };
-
-                    await db.collection.updateOne(filter, updateDocument);
-
-                    return response.status(201).json({
-                        Result: "The document has been updated."
-                    });
-                } else {
-                    return response.status(500).json({
-                        Result: "The document does not belong to the user."
-                    });
-                }
-            } catch (e) {
-                return response.status(500).json({
-                    error: {
-                        status: 500,
-                        title: "Database error",
-                        message: e.message
-                    }
-                });
-            } finally {
-                await db.client.close();
+                return { data: "The document has been updated." };
+            } else {
+                return { data: "The document does not belong to the user."};
             }
-        } else {
-            return response.status(500).json({
-                error: {
+        } catch (e) {
+            return {
+                data: {
                     status: 500,
-                    title: "No content",
-                    message: "No data content provided"
+                    title: "Database error",
+                    message: e.message
                 }
-            });
+            };
+        } finally {
+            await db.client.close();
         }
     },
 
-    //create new document in 'planet' database and connect the document to the logged in user
-    createData: async function(request, response) {
-        // req contains user object set in checkToken middleware
-        let email = request.user.email;
-        let body = request.body;
+
+    /**
+     * create new document in 'planet' database and connect the document to the logged in user
+     * @param {*} email user email adress
+     * @param {*} args new data to be created
+     * @returns {object}
+     */
+    createData: async function(email, args) {
         let db;
         let dbUser;
+        let body = {
+            name: args.name,
+            content: args.content
+        };
 
         try {
             db = await database.getDocs();
@@ -133,24 +150,27 @@ let data = {
             };
 
             await dbUser.collection.updateOne({_id: userData[0]._id}, updateDoc);
-            return response.status(201).json({
-                data: newDoc
-            });
+            return {
+                data: "The document has been created."
+            };
         } catch (e) {
-            return response.status(500).json({
-                error: {
+            return {
+                data: {
                     status: 500,
                     title: "Database error",
                     message: e.message
                 }
-            });
+            };
         } finally {
             await db.client.close();
             await dbUser.client.close();
         }
     },
 
-    // delete a document
+    /**
+     * delete a document
+     * @param {*} docId the documents id
+     */
     deleteDocument: async function(docId) {
         let dbDoc = await database.getDocs();
 
@@ -158,13 +178,16 @@ let data = {
         await dbDoc.client.close();
     },
 
-    //delete a document in 'planet' database and update 'users' database by removing document's id
-    deleteData: async function(request, response) {
-        // req contains user object set in checkToken middleware
-        let email = request.user.email;
-        let docId = ObjectId(request.params.id);
+    /**
+     * delete a document in 'planet' database and update 'users' database by removing document's id
+     * @param {*} email the user email adress
+     * @param {*} id the docuemnts id
+     * @returns {object}
+     */
+    deleteData: async function(email, id) {
+        let docId = ObjectId(id);
 
-        if (request.params.id) {
+        if (id) {
             // check if the document belongs to the loged in user
             let dbUser = await database.getUsers();
             let find = {
@@ -189,34 +212,33 @@ let data = {
                     };
 
                     await dbUser.collection.updateMany(filter, updateDoc);
-                    //await dbUser.collection.updateOne({_id: userData[0]._id}, updateDoc);
                     await dbUser.client.close();
 
                     await data.deleteDocument({_id: docId});
 
-                    return response.status(204).send();
+                    return {data: "The document has been deleted."};
                 } catch (e) {
-                    return response.status(500).json({
-                        error: {
+                    return {
+                        data: {
                             status: 500,
                             title: "Database error",
                             message: e.message
                         }
-                    });
+                    };
                 }
             } else {
-                return response.status(500).json({
-                    Result: "The document does not belong to the user."
-                });
+                return {
+                    data: "The document does not belong to the user."
+                };
             }
         } else {
-            return response.status(500).json({
-                error: {
+            return {
+                data: {
                     status: 500,
                     title: "No id",
                     message: "No data id provided"
                 }
-            });
+            };
         }
     },
 
@@ -224,7 +246,7 @@ let data = {
     test: async function(id) {
         let db = await database.getUsers();
         let docId = ObjectId(id);
-        let userId = ObjectId("6191a94997e265591c6db6b5");
+        let userId = ObjectId("");
 
         let updateDoc = {
             $push: {

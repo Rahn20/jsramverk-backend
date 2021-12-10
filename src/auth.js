@@ -13,7 +13,6 @@ const config = require('../db/config.json');
 const jwtSecret = process.env.JWT_SECRET || config.secret;
 
 const auth = {
-
     // register a user
     register: async function(body, response) {
         let name = body.name;
@@ -167,38 +166,33 @@ const auth = {
     },
 
     // check the token
-    checkToken: function(request, response, next) {
-        let token = request.headers['x-access-token'];
+    checkToken: function(context) {
+        let token = context.headers['x-access-token'];
+        let email = "";
 
         if (token) {
             jwt.verify(token, jwtSecret, function(err, decoded) {
                 if (err) {
-                    return response.status(500).json({
-                        errors: {
+                    return {
+                        data: {
                             status: 500,
-                            source: request.path,
                             title: "Failed authentication",
                             detail: err.message
                         }
-                    });
+                    };
                 }
 
-                request.user = {};
-                request.user.email = decoded.email;
-
-                return next();
+                email = decoded.email;
             });
+
+            return { "email": email};
         } else {
-            return response.status(401).json({
-                errors: {
-                    status: 401,
-                    source: request.path,
-                    title: "No token",
-                    detail: "No token provided in request headers"
-                }
-            });
+            return {
+                data: "No token"
+            };
         }
     }
+
 };
 
 module.exports = auth;
