@@ -70,7 +70,6 @@ const RootMutationType = new GraphQLObjectType ({
             type: DocumentType.data,
             description: 'Delete a user',
             resolve: async (post, args, context) => {
-                //return await users.deleteUser("test1@bth.se");
                 let check = auth.checkToken(context);
 
                 if (check.email) {

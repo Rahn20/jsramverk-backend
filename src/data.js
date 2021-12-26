@@ -3,15 +3,13 @@
  */
 "use strict";
 
-//process.env.NODE_ENV = 'test';
-
 const database = require("../db/database.js");
 const ObjectId = require('mongodb').ObjectId;
 
 const path = require("path");
 const fs = require("fs");
 const docs = JSON.parse(fs.readFileSync(
-    path.resolve(__dirname, "./setup.json"),
+    path.resolve(__dirname, "./data/setup.json"),
     "utf8"
 ));
 
@@ -243,6 +241,7 @@ const data = {
     },
 
     // add document to a specific user
+    /*
     test: async function(id) {
         let db = await database.getUsers();
         let docId = ObjectId(id);
@@ -260,7 +259,7 @@ const data = {
         await db.collection.updateOne({_id: userId}, updateDoc);
         await db.client.close();
         return docs;
-    }
+    }*/
 };
 
 module.exports = data;

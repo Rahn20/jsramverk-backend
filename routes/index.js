@@ -29,10 +29,10 @@ router.post('/register', async (request, response) => {
         let userData = await users.checkEmail(request.body.email);
 
         if (userData) {
-            return response.json({
+            return response.status(401).json({
                 errors: {
                     status: 401,
-                    source: "/login",
+                    source: "/register",
                     message: "Email already exists."
                 }
             });

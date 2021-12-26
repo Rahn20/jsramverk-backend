@@ -1,9 +1,7 @@
 /**
- *
+ * authentication
  */
 "use strict";
-
-//process.env.NODE_ENV = 'test';
 
 const database = require("../db/database.js");
 const bcrypt = require("bcryptjs");
@@ -24,7 +22,7 @@ const auth = {
             return response.status(401).json({
                 errors: {
                     status: 401,
-                    source: "/login",
+                    source: "/register",
                     title: "Email or password missing",
                     detail: "Email or password missing in request"
                 }
@@ -167,8 +165,14 @@ const auth = {
 
     // check the token
     checkToken: function(context) {
-        let token = context.headers['x-access-token'];
+        let token;
         let email = "";
+
+        if (process.env.NODE_ENV === 'test') {
+            token = process.env.NODE_TOKEN;
+        } else {
+            token = context.headers['x-access-token'];
+        }
 
         if (token) {
             jwt.verify(token, jwtSecret, function(err, decoded) {
@@ -191,8 +195,60 @@ const auth = {
                 data: "No token"
             };
         }
-    }
+    },
 
+    /**
+     * A register function for testing users and data funktions in test-directory
+     * @param {*} body the user inputs info
+     * @returns {object}
+     */
+    testRegister: async function(body) {
+        let password = body.password;
+
+        bcrypt.hash(password, 10, async function(err, hash) {
+            if (err) {
+                return {
+                    errors: {
+                        status: 500,
+                        source: "/register",
+                        title: "bcrypt error",
+                        detail: "bcrypt error"
+                    }
+                };
+            }
+
+            let db;
+
+            try {
+                db = await database.getUsers();
+                let usersData = {
+                    name: body.name,
+                    email: body.email,
+                    password: hash,
+                    docs: [],
+                };
+
+                await db.collection.insertOne(usersData);
+
+                return {
+                    data: {
+                        message: "User successfully registered."
+                    }
+                };
+            } catch (e) {
+                return {
+                    errors: {
+                        status: 500,
+                        source: "/register",
+                        title: "Database error",
+                        detail: err.message
+                    }
+                };
+            } finally {
+                await db.client.close();
+            }
+        });
+    }
 };
 
 module.exports = auth;
