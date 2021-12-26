@@ -1,14 +1,14 @@
 /* eslint-disable max-len */
 /**
- *Get, update and delete data 'documents' från database
+ * Get, update and delete data 'documents' från database
  */
 "use strict";
 
-//process.env.NODE_ENV = 'test';
+const config = require('../db/config.json');
+const sgMail = require('@sendgrid/mail');
 
 const database = require("../db/database.js");
 const ObjectId = require('mongodb').ObjectId;
-
 const data = require('./data.js');
 
 const users = {
@@ -48,7 +48,7 @@ const users = {
     /**
      * delete the logged in user and his documents
      * @param {*} email user email adress
-     * @returns {Array}
+     * @returns {object}
      */
     deleteUser: async function(email) {
         let dbUser;
@@ -153,6 +153,8 @@ const users = {
                     await dbUser.collection.updateOne(filterUser, updateUser);
                     await dbUser.collection.updateOne({ _id: allowedUserID}, updateAllowedUser);
 
+                    await users.sendEmail(email, allowedUserEmail, args.docId, allowUserData[0].name);
+
                     return {
                         data: `From user ${email} to user ${allowedUserEmail}.`
                     };
@@ -197,21 +199,31 @@ const users = {
         let res = [];
         let docId = [];
 
-        user[0].docs.map(async (doc) => {
-            let id = (doc._id).toString();
+        try {
+            user[0].docs.map(async (doc) => {
+                let id = (doc._id).toString();
 
-            docId.push(id);
-        });
+                docId.push(id);
+            });
 
-        let x = 0;
+            let x = 0;
 
-        while (x < docId.length) {
-            let doc = await data.showSpecificDoc(docId[x]);
+            while (x < docId.length) {
+                let doc = await data.showSpecificDoc(docId[x]);
 
-            res.push(doc[0]);
-            x++;
+                res.push(doc[0]);
+                x++;
+            }
+            return res;
+        } catch (e) {
+            return {
+                data: {
+                    status: 400,
+                    title: "Error",
+                    message: e.message
+                }
+            };
         }
-        return res;
     },
 
     /**
@@ -232,6 +244,43 @@ const users = {
         });
 
         return result;
+    },
+
+    /**
+     * Sending email using SendGrid mail API
+     * @param {string} from from user email adress
+     * @param {string} to to user email adress
+     * @param {string} docId document id
+     * @param {string} name to-user name
+     */
+    sendEmail: async function (from, to, docId, name) {
+        const docName = await data.showSpecificDoc(docId);
+        const getApikey = config.api_key;
+        const fromEmail = config.mailFrom;
+        const txt = ` <h4> Hej ${name} </h4>
+            <p> Användaren ${from} har bjudit in dig at redigera dokumentet <strong> ${docName[0].name} </strong>.</p> 
+            <p> Du behöver logga in för att redigera dokumentet. </p>
+            <p><a href="https://www.student.bth.se/~rahn20/editor/frontend/login" target="_blank"> Klick här för att logga in </a></p>
+            <br><hr>
+            <p>&copy; 2021 Rahn20-editor</p>
+        `;
+
+        sgMail.setApiKey(getApikey);
+        const msg = {
+            to: to,      // change 'to' to fromEmail when testing
+            from: fromEmail,
+            subject: 'Redigera dokument',
+            html: txt,
+        };
+
+        sgMail
+            .send(msg)
+            .then(() => {
+                console.log('Email sent');
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
 };
 
