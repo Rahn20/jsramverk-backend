@@ -44,6 +44,14 @@ npm install --save graphql
 npm install --save express-graphql
 ```
 
+### SendGrid
+
+SendGrid är ett mail API som jag använde för att koppla på möjligheten att maila ut inbjudan till att redigera dokument.
+
+```
+npm install --save @sendgrid/mail
+```
+
 ## Me-API
 
 API:et (https://jsramverk-editor-rahn20.azurewebsites.net/me-api). Det går att hantera innehållet direkt från editor [Frontend-editor](https://www.student.bth.se/~rahn20/editor/frontend/).
