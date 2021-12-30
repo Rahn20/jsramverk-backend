@@ -56,7 +56,7 @@ const schema = new GraphQLSchema({
 
 app.use('/me-api/graphql', graphqlHTTP({
     schema: schema,
-    graphiql: true,
+    graphiql: false,
 }));
 
 // sockets

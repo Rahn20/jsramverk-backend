@@ -167,12 +167,15 @@ const data = {
 
     /**
      * delete a document
-     * @param {*} docId the documents id
+     * @param {string} docId the documents id
      */
     deleteDocument: async function(docId) {
         let dbDoc = await database.getDocs();
+        let filter = {
+            _id: docId
+        };
 
-        await dbDoc.collection.findOneAndDelete(docId);
+        await dbDoc.collection.findOneAndDelete(filter);
         await dbDoc.client.close();
     },
 
@@ -197,23 +200,45 @@ const data = {
 
             if (userData.length >= 1) {
                 try {
-                    let updateDoc = {
-                        $pull: {
-                            docs: {
-                                _id: docId
+                    (userData[0].docs).map(async (doc) => {
+                        if (id === (doc._id).toString()) {
+                            //if user is the owner of the documents
+                            if (doc.allowed_users) {
+                                let updateDoc = {
+                                    $pull: {
+                                        docs: {
+                                            _id: docId
+                                        }
+                                    }
+                                };
+
+                                let filter = {
+                                    "docs._id": docId
+                                };
+
+                                await dbUser.collection.updateMany(filter, updateDoc);
+                                await dbUser.client.close();
+
+                                await data.deleteDocument(docId);
+                            } else {
+                                let updateDoc = {
+                                    $pull: {
+                                        docs: {
+                                            _id: docId
+                                        }
+                                    }
+                                };
+
+                                let filter = {
+                                    _id: userData[0]._id,
+                                    "docs._id": docId
+                                };
+
+                                await dbUser.collection.updateMany(filter, updateDoc);
+                                await dbUser.client.close();
                             }
                         }
-                    };
-
-                    let filter = {
-                        "docs._id": docId
-                    };
-
-                    await dbUser.collection.updateMany(filter, updateDoc);
-                    await dbUser.client.close();
-
-                    await data.deleteDocument({_id: docId});
-
+                    });
                     return {data: "The document has been deleted."};
                 } catch (e) {
                     return {
@@ -245,7 +270,7 @@ const data = {
     test: async function(id) {
         let db = await database.getUsers();
         let docId = ObjectId(id);
-        let userId = ObjectId("");
+        let userId = ObjectId("61cd04e58caf92dd9cfa6057");
 
         let updateDoc = {
             $push: {

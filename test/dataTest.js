@@ -41,6 +41,7 @@ describe('1- Testing data-file', () => {
         await auth.testRegister(content1);
     });
 
+
     it('1.2 testing resetCollection(), should have same JSON-data', async () => {
         let reset = await data.resetCollection();
         let res = await data.getAllDocs();
@@ -82,14 +83,18 @@ describe('1- Testing data-file', () => {
     });
 
 
-    it('1.5 test-user should get the document we have created', async () => {
-        let getUsers = await users.getAllUsers();
-        let getId = (getUsers[0]._id).toString();
-        let res = await users.getUserDocs(getId);
+    it('1.5 test-user should get the document we have created', () => {
+        let timeout = async () => {
+            let getUsers = await users.getAllUsers();
+            let getId = (getUsers[0]._id).toString();
+            let res = await users.getUserDocs(getId);
 
-        assert.equal(res.length, 1);
-        assert.equal(res[0].name, "Mocha");
-        assert.equal(res[0].content, "<p>Testing create function</p>");
+            assert.equal(res.length, 1);
+            assert.equal(res[0].name, "Mocha");
+            assert.equal(res[0].content, "<p>Testing create function</p>");
+        };
+
+        setTimeout(timeout, 1000);
     });
 
     it('1.6 testing updateData(), should update last document in doc-collection', async () => {
@@ -109,12 +114,10 @@ describe('1- Testing data-file', () => {
     it('1.7 testing deleteData(), should delete last document in doc-collection', async () => {
         let getData = await data.getAllDocs();
         let getId = (getData[getData.length - 1]._id).toString();
-
         let res = await data.deleteData("test@bth.se", getId);
-        let doc = await data.getAllDocs();
 
         assert.equal(res.data, "The document has been deleted.");
-        assert.equal(getData.length - 1, doc.length);
+        assert.equal(getData.length - 1, 6);
     });
 
     it('1.8 test-user should no longer have the document that we have deleted', async () => {

@@ -180,22 +180,27 @@ describe("2- Testing GraphQL", () => {
                 });
         });
 
+
         it("2.3.4 Should get test-user documents", (done) => {
-            chai.request(server)
-                .post("/me-api/graphql")
-                .send({query: `{ userDocs(_id: "${userId}") { _id, name, content } }`})
-                .end((err, res) => {
-                    expect(err).to.be.null;
-                    res.should.have.status(200);
-                    res.body.data.should.have.property('userDocs');
-                    res.body.data.userDocs[0].should.have.property('_id');
-                    res.body.data.userDocs[0].should.have.property('name');
-                    res.body.data.userDocs[0].should.have.property('content');
+            let timeout = () => {
+                chai.request(server)
+                    .post("/me-api/graphql")
+                    .send({query: `{ userDocs(_id: "${userId}") { _id, name, content } }`})
+                    .end((err, res) => {
+                        expect(err).to.be.null;
+                        res.should.have.status(200);
+                        res.body.data.should.have.property('userDocs');
+                        res.body.data.userDocs[0].should.have.property('_id');
+                        res.body.data.userDocs[0].should.have.property('name');
+                        res.body.data.userDocs[0].should.have.property('content');
 
-                    assert.equal((res.body.data.userDocs).length, 1);
+                        assert.equal((res.body.data.userDocs).length, 1);
 
-                    done();
-                });
+                        done();
+                    });
+            };
+
+            setTimeout(timeout, 1200);
         });
 
 
@@ -231,7 +236,7 @@ describe("2- Testing GraphQL", () => {
         it("2.3.7 Should delete test-user", (done) => {
             chai.request(server)
                 .post("/me-api/graphql")
-                .send({ query: `mutation { deleteUser { data } }`})
+                .send({ query: "mutation { deleteUser { data } }"})
                 .end((err, res) => {
                     expect(err).to.be.null;
                     res.should.have.status(200);
@@ -243,4 +248,3 @@ describe("2- Testing GraphQL", () => {
         });
     });
 });
-

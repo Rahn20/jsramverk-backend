@@ -5,11 +5,14 @@
 "use strict";
 
 const mongo = require("mongodb").MongoClient;
-const config = process.env.rahn20 || require("./config.json");
+
+const username = process.env.BACKEND_USERNAME_ || require("./config.json").username;
+const password = process.env.BACKEND_PASSWORD_ || require("./config.json").password;
+
 
 const database = {
     getDocs: async function () {
-        let dsn = `mongodb+srv://${config.username}:${config.password}` +
+        let dsn = `mongodb+srv://${username}:${password}` +
             `@cluster1.hisbu.mongodb.net/planets?retryWrites=true&w=majority`;
 
         if (process.env.NODE_ENV === 'test') {
@@ -32,7 +35,7 @@ const database = {
 
 
     getUsers: async function () {
-        let dsn = `mongodb+srv://${config.username}:${config.password}` +
+        let dsn = `mongodb+srv://${username}:${password}` +
             `@cluster1.hisbu.mongodb.net/users?retryWrites=true&w=majority`;
 
         if (process.env.NODE_ENV === 'test') {

@@ -6,9 +6,8 @@
 const database = require("../db/database.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const config = require('../db/config.json');
 
-const jwtSecret = process.env.JWT_SECRET || config.secret;
+const jwtSecret = process.env.JWT_SECRET || require('../db/config.json').secret;
 
 const auth = {
     // register a user

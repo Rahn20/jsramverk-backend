@@ -1,10 +1,13 @@
+/* eslint-disable indent */
 /* eslint-disable max-len */
 /**
  * Get, update and delete data 'documents' från database
  */
 "use strict";
 
-const config = require('../db/config.json');
+const fromUser = process.env.FROM_USER || require('../db/config.json').mailFrom;
+const apiKey = process.env.API_KEY || require('../db/config.json').api_key;
+
 const sgMail = require('@sendgrid/mail');
 
 const database = require("../db/database.js");
@@ -59,14 +62,16 @@ const users = {
 
             let getUser = await dbUser.collection.find({email: email}, {}).toArray();
             let docs = getUser[0].docs;
-            let x = 0;
 
-            db = await database.getDocs();
-
-            while (x < docs.length) {
-                await db.collection.deleteMany({ _id: docs[x]._id });
-                await users.updateUser(docs[x]._id);
-                x += 1;
+            if (docs.length >= 1) {
+                docs.map(async (doc) => {
+                    if (doc.allowed_users) {
+                        db = await database.getDocs();
+                        await db.collection.deleteMany({ _id: doc._id });
+                        await users.updateUser(doc._id);
+                        await db.client.close();
+                    }
+                });
             }
 
             await dbUser.collection.findOneAndDelete({ _id: getUser[0]._id });
@@ -82,8 +87,8 @@ const users = {
                 }
             };
         } finally {
+            //await db.client.close();
             await dbUser.client.close();
-            await db.client.close();
         }
     },
 
@@ -141,7 +146,7 @@ const users = {
                         $push: {
                             docs: {
                                 _id: docId,
-                                allowed_users: []
+                                allowed_users: null
                             }
                         }
                     };
@@ -152,7 +157,6 @@ const users = {
 
                     await dbUser.collection.updateOne(filterUser, updateUser);
                     await dbUser.collection.updateOne({ _id: allowedUserID}, updateAllowedUser);
-
                     await users.sendEmail(email, allowedUserEmail, args.docId, allowUserData[0].name);
 
                     return {
@@ -255,20 +259,18 @@ const users = {
      */
     sendEmail: async function (from, to, docId, name) {
         const docName = await data.showSpecificDoc(docId);
-        const getApikey = config.api_key;
-        const fromEmail = config.mailFrom;
         const txt = ` <h4> Hej ${name} </h4>
             <p> Användaren ${from} har bjudit in dig at redigera dokumentet <strong> ${docName[0].name} </strong>.</p> 
             <p> Du behöver logga in för att redigera dokumentet. </p>
-            <p><a href="https://www.student.bth.se/~rahn20/editor/frontend/login" target="_blank"> Klick här för att logga in </a></p>
+            <p><a href="https://www.student.bth.se/~rahn20/editor/frontend/" target="_blank"> Klick här för att logga in </a></p>
             <br><hr>
             <p>&copy; 2021 Rahn20-editor</p>
         `;
 
-        sgMail.setApiKey(getApikey);
+        sgMail.setApiKey(apiKey);
         const msg = {
-            to: to,      // change 'to' to fromEmail when testing
-            from: fromEmail,
+            to: to,      // change 'to' to fromUser when testing
+            from: fromUser,
             subject: 'Redigera dokument',
             html: txt,
         };

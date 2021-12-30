@@ -12,7 +12,7 @@ const {
 const DocumentType = {
     documentType: new GraphQLObjectType({
         name: 'Document',
-        description: 'This represent a document',
+        description: 'This represent the document',
         fields: () => ({
             _id: { type:  new GraphQLNonNull(GraphQLString) },
             name: { type: new GraphQLNonNull(GraphQLString) },
@@ -24,7 +24,7 @@ const DocumentType = {
         name: 'Data',
         description: 'This represent the data',
         fields: () => ({
-            data: { type:  new GraphQLNonNull(GraphQLString) }
+            data: { type: new GraphQLNonNull(GraphQLString) }
         })
     })
 };
