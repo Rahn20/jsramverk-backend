@@ -1,4 +1,5 @@
 [![Build Status](https://app.travis-ci.com/Rahn20/jsramverk-backend.svg?branch=main)](https://app.travis-ci.com/Rahn20/jsramverk-backend)
+[![CircleCI](https://circleci.com/gh/Rahn20/jsramverk-backend/tree/main.svg?style=svg)](https://circleci.com/gh/Rahn20/jsramverk-backend/tree/main)
 
 # jsramverk-backend
 

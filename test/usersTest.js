@@ -38,7 +38,7 @@ describe('5- Testing users-file', () => {
             assert.equal(docs.length, 8);
         };
 
-        setTimeout(timeout, 1000);
+        setTimeout(timeout, 500);
     });
 
     it('5.2 testing getSpecificUser(), should get the first user in the users_data-collection', async () => {
@@ -65,7 +65,7 @@ describe('5- Testing users-file', () => {
             assert.equal(res[1].content, "<p>Create document 2 </p>");
         };
 
-        setTimeout(timeout, 1000);
+        setTimeout(timeout, 500);
     });
 
 
@@ -88,7 +88,7 @@ describe('5- Testing users-file', () => {
             assert.equal(checkUserDoc.length, 1);
         };
 
-        setTimeout(timeout, 1000);
+        setTimeout(timeout, 500);
     });
 
     it('5.5 testing checkEmail, should be false if email does not exist in our database', async () => {
@@ -98,23 +98,19 @@ describe('5- Testing users-file', () => {
     });
 
 
-    it('5.6 testing deleteUser(), should delete the test-users we have created', () => {
-        let timeout = async () => {
-            let user1 = await users.deleteUser("test1@bth.se");
-            let user2 = await users.deleteUser("test2@bth.se");
+    it('5.6 testing deleteUser(), should delete the test-users we have created', async () => {
+        let user1 = await users.deleteUser("test1@bth.se");
+        let user2 = await users.deleteUser("test2@bth.se");
 
-            let allUsers = await users.getAllUsers();
-            let getData = await data.getAllDocs();
+        let allUsers = await users.getAllUsers();
+        let getData = await data.getAllDocs();
 
-            assert(user1.data, "Successfully deleted one user.");
-            assert(user2.data, "Successfully deleted one user.");
+        assert(user1.data, "Successfully deleted one user.");
+        assert(user2.data, "Successfully deleted one user.");
 
-            // deleting the users means deleting their documents which was 2
-            assert.equal(getData.length, 6);
-            assert.equal(allUsers.length, 0);
-        };
-
-        setTimeout(timeout, 1000);
+        // deleting the users means deleting their documents which was 2
+        assert.equal(getData.length, 6);
+        assert.equal(allUsers.length, 0);
     });
 });
 

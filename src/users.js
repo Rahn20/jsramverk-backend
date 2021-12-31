@@ -269,7 +269,7 @@ const users = {
 
         sgMail.setApiKey(apiKey);
         const msg = {
-            to: to,      // change 'to' to fromUser when testing
+            to: fromUser,      // change 'to' to fromUser when testing
             from: fromUser,
             subject: 'Redigera dokument',
             html: txt,

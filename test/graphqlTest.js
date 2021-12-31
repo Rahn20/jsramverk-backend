@@ -142,17 +142,21 @@ describe("2- Testing GraphQL", () => {
 
     describe("2.3 Mutation Test", () => {
         it("2.3.1 Add a new document to our test-user", (done) => {
-            chai.request(server)
-                .post("/me-api/graphql")
-                .send({ query: 'mutation { addDoc(name: "Mocha", content: "<p> Testing graphQl </p>") { data } }'})
-                .end((err, res) => {
-                    expect(err).to.be.null;
-                    res.should.have.status(200);
-                    res.body.data.should.have.property('addDoc');
-                    res.body.data.addDoc.should.have.property('data').eql('The document has been created.');
+            let timeout = () => {
+                chai.request(server)
+                    .post("/me-api/graphql")
+                    .send({ query: 'mutation { addDoc(name: "Mocha", content: "<p> Testing graphQl </p>") { data } }'})
+                    .end((err, res) => {
+                        expect(err).to.be.null;
+                        res.should.have.status(200);
+                        res.body.data.should.have.property('addDoc');
+                        res.body.data.addDoc.should.have.property('data').eql('The document has been created.');
 
-                    done();
-                });
+                        done();
+                    });
+            };
+
+            setTimeout(timeout, 1000);
         });
 
 
@@ -181,29 +185,6 @@ describe("2- Testing GraphQL", () => {
         });
 
 
-        it("2.3.4 Should get test-user documents", (done) => {
-            let timeout = () => {
-                chai.request(server)
-                    .post("/me-api/graphql")
-                    .send({query: `{ userDocs(_id: "${userId}") { _id, name, content } }`})
-                    .end((err, res) => {
-                        expect(err).to.be.null;
-                        res.should.have.status(200);
-                        res.body.data.should.have.property('userDocs');
-                        res.body.data.userDocs[0].should.have.property('_id');
-                        res.body.data.userDocs[0].should.have.property('name');
-                        res.body.data.userDocs[0].should.have.property('content');
-
-                        assert.equal((res.body.data.userDocs).length, 1);
-
-                        done();
-                    });
-            };
-
-            setTimeout(timeout, 1200);
-        });
-
-
         it("2.3.5 Should allow test1-user to edit test-user document", (done) => {
             chai.request(server)
                 .post("/me-api/graphql")
@@ -213,6 +194,24 @@ describe("2- Testing GraphQL", () => {
                     res.should.have.status(200);
                     res.body.data.should.have.property('allowUser');
                     res.body.data.allowUser.should.have.property('data').eql('From user test@bth.se to user test1@bth.se.');
+
+                    done();
+                });
+        });
+
+        it("2.3.4 Should get test-user documents", (done) => {
+            chai.request(server)
+                .post("/me-api/graphql")
+                .send({query: `{ userDocs(_id: "${userId}") { _id, name, content } }`})
+                .end((err, res) => {
+                    expect(err).to.be.null;
+                    res.should.have.status(200);
+                    res.body.data.should.have.property('userDocs');
+                    res.body.data.userDocs[0].should.have.property('_id');
+                    res.body.data.userDocs[0].should.have.property('name');
+                    res.body.data.userDocs[0].should.have.property('content');
+
+                    assert.equal((res.body.data.userDocs).length, 1);
 
                     done();
                 });
